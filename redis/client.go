@@ -1,11 +1,12 @@
-package main
+package redis
 
 import (
 	"github.com/go-redis/redis"
 	"log"
+	"randombot/config"
 )
 
-func createRedisClient(config *Config) *redis.Client {
+func CreateRedisClient(config *config.Config) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     config.RedisURL,
 		Password: config.RedisPassword,
@@ -14,7 +15,7 @@ func createRedisClient(config *Config) *redis.Client {
 	return client
 }
 
-func checkConnection(client *redis.Client, fatal bool) bool {
+func CheckConnection(client *redis.Client, fatal bool) bool {
 	_, err := client.Ping().Result()
 	successful := err == nil
 	if successful {

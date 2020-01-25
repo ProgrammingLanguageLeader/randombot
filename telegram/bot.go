@@ -1,15 +1,18 @@
-package main
+package telegram
 
 import (
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
+	"randombot/config"
+	"randombot/net"
+	"randombot/telegram/message"
 )
 
-func configureBot(config *Config) *tgbotapi.BotAPI {
+func ConfigureBot(config *config.Config) *tgbotapi.BotAPI {
 	var err error
 	var bot *tgbotapi.BotAPI
 	if config.UseProxy {
-		client := ConfigureClientProxy(config)
+		client := net.ConfigureClientProxy(config)
 		bot, err = tgbotapi.NewBotAPIWithClient(config.TelegramToken, client)
 	} else {
 		bot, err = tgbotapi.NewBotAPI(config.TelegramToken)
@@ -22,7 +25,7 @@ func configureBot(config *Config) *tgbotapi.BotAPI {
 	return bot
 }
 
-func launchMessageProcessing(bot *tgbotapi.BotAPI) {
+func LaunchMessageProcessing(bot *tgbotapi.BotAPI) {
 	update := tgbotapi.NewUpdate(0)
 	update.Timeout = 60
 	updates, err := bot.GetUpdatesChan(update)
@@ -31,7 +34,7 @@ func launchMessageProcessing(bot *tgbotapi.BotAPI) {
 	}
 	for update := range updates {
 		if update.Message != nil {
-			handleMessage(bot, update.Message)
+			message.HandleMessage(bot, update.Message)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package main
+package net
 
 import (
 	"context"
@@ -6,10 +6,11 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"randombot/config"
 )
 
 // it's not recommended to use proxy in production
-func ConfigureClientProxy(config *Config) *http.Client {
+func ConfigureClientProxy(config *config.Config) *http.Client {
 	dialer, proxyErr := proxy.SOCKS5(
 		config.ProxyTransportProtocol,
 		config.ProxyURL,

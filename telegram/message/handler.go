@@ -1,18 +1,11 @@
-package main
+package message
 
 import (
 	"github.com/Syfaro/telegram-bot-api"
-	"log"
 	"math/rand"
 )
 
-func sendMessage(bot *tgbotapi.BotAPI, message *tgbotapi.MessageConfig) {
-	if _, err := bot.Send(message); err != nil {
-		log.Println(err)
-	}
-}
-
-func handleMessage(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
+func HandleMessage(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	if message.IsCommand() {
 		handleCommand(bot, message.Command(), message.Chat.ID)
 	} else {
