@@ -8,7 +8,7 @@ import (
 
 func sendMessage(bot *tgbotapi.BotAPI, message *tgbotapi.MessageConfig) {
 	if _, err := bot.Send(message); err != nil {
-		log.Panic(err)
+		log.Println(err)
 	}
 }
 
@@ -27,7 +27,7 @@ func handleCommand(bot *tgbotapi.BotAPI, command string, chatId int64) {
 	case "help":
 		responseMessage.Text = "type /flipcoin"
 	case "flipcoin":
-		if rand.Int() % 2 == 0 {
+		if rand.Int()%2 == 0 {
 			responseMessage.Text = "It's heads!"
 		} else {
 			responseMessage.Text = "It's tails!"
