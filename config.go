@@ -14,6 +14,9 @@ type Config struct {
 	ProxyUsername          string `split_words:"true"`
 	ProxyPassword          string `split_words:"true"`
 	ProxyTransportProtocol string `split_words:"true" default:"tcp"`
+	RedisURL               string `split_words:"true" default:"127.0.0.1:6379"`
+	RedisPassword          string `split_words:"true" default:""`
+	RedisDB                int    `split_words:"true" default:"0"`
 }
 
 func getConfig() *Config {
