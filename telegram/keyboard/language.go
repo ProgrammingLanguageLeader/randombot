@@ -7,15 +7,18 @@ const (
 	RussianLanguage string = "Russian"
 )
 
-var languageKeyboard = tgbotapi.NewReplyKeyboard(
+var languageSettingsKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(EnglishLanguage),
 	),
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(RussianLanguage),
 	),
+	tgbotapi.NewKeyboardButtonRow(
+		tgbotapi.NewKeyboardButton(Exit),
+	),
 )
 
-func GetLanguageKeyboard() *tgbotapi.ReplyKeyboardMarkup {
-	return &languageKeyboard
+func GetLanguageSettingsKeyboard() *tgbotapi.ReplyKeyboardMarkup {
+	return &languageSettingsKeyboard
 }

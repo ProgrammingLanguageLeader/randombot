@@ -11,12 +11,11 @@ const (
 var settingsKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(RandomGeneratorSettings),
-	),
-	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(ChoiceSettings),
 	),
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(LanguageSettings),
+		tgbotapi.NewKeyboardButton(Exit),
 	),
 )
 
