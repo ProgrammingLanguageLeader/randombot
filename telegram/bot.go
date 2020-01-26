@@ -3,9 +3,9 @@ package telegram
 import (
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
+	"randombot/app/service/message"
 	"randombot/config"
 	"randombot/net"
-	"randombot/telegram/message"
 )
 
 func ConfigureBot(config *config.Config) *tgbotapi.BotAPI {
@@ -25,7 +25,7 @@ func ConfigureBot(config *config.Config) *tgbotapi.BotAPI {
 	return bot
 }
 
-func LaunchMessageProcessing(bot *tgbotapi.BotAPI) {
+func LaunchMessageProcessing(bot *tgbotapi.BotAPI, service *message.Service) {
 	update := tgbotapi.NewUpdate(0)
 	update.Timeout = 60
 	updates, err := bot.GetUpdatesChan(update)
@@ -33,8 +33,16 @@ func LaunchMessageProcessing(bot *tgbotapi.BotAPI) {
 		log.Fatal(err)
 	}
 	for update := range updates {
-		if update.Message != nil {
-			message.HandleMessage(bot, update.Message)
+		msg := update.Message
+		if msg != nil {
+			response, replyKeyboardMarkup := service.HandleMessage(msg)
+			messageConfig := tgbotapi.NewMessage(msg.Chat.ID, response)
+			if replyKeyboardMarkup != nil {
+				messageConfig.ReplyMarkup = replyKeyboardMarkup
+			} else {
+				messageConfig.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
+			}
+			sendMessage(bot, &messageConfig)
 		}
 	}
 }
