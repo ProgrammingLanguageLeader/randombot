@@ -4,7 +4,7 @@ import "github.com/Syfaro/telegram-bot-api"
 
 const (
 	FlipCoin     string = "Flip a coin"
-	RollDie      string = "Roll a die"
+	RollDice     string = "Roll the dice"
 	RandomNumber string = "Random number"
 	MakeChoice   string = "Make a choice"
 	Settings     string = "Settings"
@@ -14,7 +14,7 @@ const (
 var startKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(FlipCoin),
-		tgbotapi.NewKeyboardButton(RollDie),
+		tgbotapi.NewKeyboardButton(RollDice),
 		tgbotapi.NewKeyboardButton(RandomNumber),
 	),
 	tgbotapi.NewKeyboardButtonRow(
