@@ -1,4 +1,4 @@
-package redis
+package user
 
 import (
 	"encoding/json"
@@ -6,21 +6,15 @@ import (
 	"log"
 )
 
-type User struct {
-	ID              int      `json:"id"`
-	LanguageCode    string   `json:"languageCode"`
-	State           string   `json:"state"`
-	Variants        []string `json:"variants"`
-	MinRandomNumber int      `json:"minRandomNumber"`
-	MaxRandomNumber int      `json:"maxRandomNumber"`
-}
-
-type UserRepository struct {
+type Repository struct {
 	DbClient *redis.Client
 }
 
-func (repository *UserRepository) Get(id int) (*User, error) {
+func (repository *Repository) Get(id int) (*User, error) {
 	userString, err := repository.DbClient.Get(string(id)).Result()
+	if err == redis.Nil {
+		return nil, &DoesNotExist{}
+	}
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -34,7 +28,7 @@ func (repository *UserRepository) Get(id int) (*User, error) {
 	return &user, nil
 }
 
-func (repository *UserRepository) Set(user *User) error {
+func (repository *Repository) Set(user *User) error {
 	userJson, err := json.Marshal(user)
 	if err != nil {
 		log.Println(err)

@@ -3,9 +3,10 @@ package message
 import (
 	"github.com/Syfaro/telegram-bot-api"
 	"randombot/redis"
+	"randombot/redis/user"
 )
 
-func (service *Service) GoToLanguageSettings(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GoToLanguageSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	user.State = redis.LanguageMenu
 	err := service.userRepository.Set(user)
 	if err != nil {
@@ -14,7 +15,7 @@ func (service *Service) GoToLanguageSettings(user *redis.User) (string, *tgbotap
 	return "Choose a language", GetKeyboardByState(user.State)
 }
 
-func (service *Service) GoToRandomGeneratorSettings(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GoToRandomGeneratorSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.State = redis.RandomNumberMenu
 	err := service.userRepository.Set(user)
@@ -24,7 +25,7 @@ func (service *Service) GoToRandomGeneratorSettings(user *redis.User) (string, *
 	return "Enter minimum and maximum numbers space separated", GetKeyboardByState(user.State)
 }
 
-func (service *Service) GoToChoiceSettings(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GoToChoiceSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.State = redis.ChoiceMenu
 	err := service.userRepository.Set(user)
@@ -36,7 +37,7 @@ func (service *Service) GoToChoiceSettings(user *redis.User) (string, *tgbotapi.
 
 func (service *Service) SwitchLanguage(
 	languageCode string,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.State = redis.StartMenu
@@ -51,7 +52,7 @@ func (service *Service) SwitchLanguage(
 func (service *Service) ChangeRandomGeneratorSettings(
 	minNumber int,
 	maxNumber int,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.MinRandomNumber = minNumber
@@ -66,7 +67,7 @@ func (service *Service) ChangeRandomGeneratorSettings(
 
 func (service *Service) ChangeChoiceSettings(
 	variants []string,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.Variants = variants

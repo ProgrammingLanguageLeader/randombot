@@ -4,42 +4,46 @@ import (
 	"fmt"
 	"github.com/Syfaro/telegram-bot-api"
 	"randombot/redis"
+	"randombot/redis/user"
 	"randombot/telegram/keyboard"
 	"regexp"
 	"strings"
 )
 
 func (service *Service) HandleMessage(message *tgbotapi.Message) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	user, err := service.userRepository.Get(message.From.ID)
+	userInstance, err := service.userRepository.Get(message.From.ID)
 	if err != nil {
-		return service.ProcessError(redis.DefaultState)
+		switch err.(type) {
+		case *user.DoesNotExist:
+			return service.RegisterUser(message.From)
+		default:
+			return service.ProcessError(redis.DefaultState)
+		}
 	}
 	if message.IsCommand() {
-		return service.HandleCommand(message, user)
+		return service.HandleCommand(message, userInstance)
 	}
-	switch user.State {
+	switch userInstance.State {
 	case redis.StartMenu:
-		return service.HandleStartMenu(message, user)
+		return service.HandleStartMenu(message, userInstance)
 	case redis.ChoiceMenu:
-		return service.HandleChoiceMenu(message, user)
+		return service.HandleChoiceMenu(message, userInstance)
 	case redis.SettingsMenu:
-		return service.HandleSettingsMenu(message, user)
+		return service.HandleSettingsMenu(message, userInstance)
 	case redis.RandomNumberMenu:
-		return service.HandleRandomNumberMenu(message, user)
+		return service.HandleRandomNumberMenu(message, userInstance)
 	case redis.LanguageMenu:
-		return service.HandleLanguageMenu(message, user)
+		return service.HandleLanguageMenu(message, userInstance)
 	}
-	return service.Exit(user)
+	return service.Exit(userInstance)
 }
 
 func (service *Service) HandleCommand(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	command := message.Command()
 	switch command {
-	case "start":
-		return service.RegisterUser(message.From)
 	case "help", "about":
 		return service.GetAbout(user)
 	case "flipcoin":
@@ -50,7 +54,7 @@ func (service *Service) HandleCommand(
 
 func (service *Service) HandleStartMenu(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	switch message.Text {
 	case keyboard.FlipCoin:
@@ -71,7 +75,7 @@ func (service *Service) HandleStartMenu(
 
 func (service *Service) HandleChoiceMenu(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	if message.Text == keyboard.Exit {
 		return service.Exit(user)
@@ -88,7 +92,7 @@ func (service *Service) HandleChoiceMenu(
 
 func (service *Service) HandleSettingsMenu(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	switch message.Text {
 	case keyboard.RandomGeneratorSettings:
@@ -105,7 +109,7 @@ func (service *Service) HandleSettingsMenu(
 
 func (service *Service) HandleRandomNumberMenu(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	input := message.Text
 	if input == keyboard.Exit {
@@ -122,7 +126,7 @@ func (service *Service) HandleRandomNumberMenu(
 
 func (service *Service) HandleLanguageMenu(
 	message *tgbotapi.Message,
-	user *redis.User,
+	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	input := message.Text
 	var languageCode = ""

@@ -3,9 +3,10 @@ package message
 import (
 	"github.com/Syfaro/telegram-bot-api"
 	"randombot/redis"
+	"randombot/redis/user"
 )
 
-func (service *Service) Exit(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) Exit(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.State = redis.StartMenu
 	err := service.userRepository.Set(user)

@@ -3,16 +3,16 @@ package message
 import (
 	"github.com/Syfaro/telegram-bot-api"
 	. "github.com/go-redis/redis"
-	"randombot/redis"
+	"randombot/redis/user"
 )
 
 type Service struct {
-	userRepository *redis.UserRepository
+	userRepository *user.Repository
 }
 
 func NewService(dbClient *Client) *Service {
 	return &Service{
-		userRepository: &redis.UserRepository{
+		userRepository: &user.Repository{
 			DbClient: dbClient,
 		},
 	}

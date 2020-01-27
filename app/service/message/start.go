@@ -5,12 +5,13 @@ import (
 	"github.com/Syfaro/telegram-bot-api"
 	"math/rand"
 	"randombot/redis"
+	"randombot/redis/user"
 	"strings"
 )
 
 func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	langCode := strings.Split(tgUser.LanguageCode, "-")[0]
-	user := redis.User{
+	userInstance := user.User{
 		ID:              tgUser.ID,
 		LanguageCode:    langCode,
 		State:           redis.StartMenu,
@@ -18,14 +19,14 @@ func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.R
 		MinRandomNumber: 1,
 		MaxRandomNumber: 10,
 	}
-	err := service.userRepository.Set(&user)
+	err := service.userRepository.Set(&userInstance)
 	if err != nil {
 		return service.ProcessError(redis.DefaultState)
 	}
-	return "Hello! You have successfully registered!", GetKeyboardByState(user.State)
+	return "Hello! You have successfully registered!", GetKeyboardByState(userInstance.State)
 }
 
-func (service *Service) FlipCoin(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	var flipResult string
 	if rand.Int()%2 == 0 {
 		flipResult = "it's heads!"
@@ -36,14 +37,14 @@ func (service *Service) FlipCoin(user *redis.User) (string, *tgbotapi.ReplyKeybo
 	return response, GetKeyboardByState(user.State)
 }
 
-func (service *Service) RollDice(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) RollDice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	firstDie := rand.Int()%6 + 1
 	secondDie := rand.Int()%6 + 1
 	response := fmt.Sprintf("You have rolled the dice: %d and %d", firstDie, secondDie)
 	return response, GetKeyboardByState(user.State)
 }
 
-func (service *Service) GetRandomNumber(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GetRandomNumber(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	randNum := rand.Intn(user.MaxRandomNumber-user.MinRandomNumber) + user.MinRandomNumber
 	response := fmt.Sprintf(
 		"Random number from the range [%d...%d]: %d",
@@ -53,7 +54,7 @@ func (service *Service) GetRandomNumber(user *redis.User) (string, *tgbotapi.Rep
 	return response, GetKeyboardByState(user.State)
 }
 
-func (service *Service) MakeChoice(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	if user.Variants == nil || len(user.Variants) == 0 {
 		return service.GoToChoiceSettings(user)
 	}
@@ -63,7 +64,7 @@ func (service *Service) MakeChoice(user *redis.User) (string, *tgbotapi.ReplyKey
 	return response, GetKeyboardByState(user.State)
 }
 
-func (service *Service) GoToSettings(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GoToSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	currentState := user.State
 	user.State = redis.SettingsMenu
 	err := service.userRepository.Set(user)
@@ -73,6 +74,6 @@ func (service *Service) GoToSettings(user *redis.User) (string, *tgbotapi.ReplyK
 	return "Choose one of the following options", GetKeyboardByState(user.State)
 }
 
-func (service *Service) GetAbout(user *redis.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+func (service *Service) GetAbout(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	return "Well, I hope it will be written soon :)", GetKeyboardByState(user.State)
 }
