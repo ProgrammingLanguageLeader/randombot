@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-redis/redis"
 	"log"
+	"strconv"
 )
 
 type Repository struct {
@@ -11,7 +12,8 @@ type Repository struct {
 }
 
 func (repository *Repository) Get(id int) (*User, error) {
-	userString, err := repository.DbClient.Get(string(id)).Result()
+	userKey := strconv.Itoa(id)
+	userString, err := repository.DbClient.Get(userKey).Result()
 	if err == redis.Nil {
 		return nil, &DoesNotExist{}
 	}
@@ -34,6 +36,7 @@ func (repository *Repository) Set(user *User) error {
 		log.Println(err)
 		return err
 	}
-	repository.DbClient.Set(string(user.ID), userJson, 0)
+	userKey := strconv.Itoa(user.ID)
+	repository.DbClient.Set(userKey, userJson, 0)
 	return nil
 }
