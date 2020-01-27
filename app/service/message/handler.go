@@ -80,9 +80,9 @@ func (service *Service) HandleChoiceMenu(
 	if message.Text == keyboard.Exit {
 		return service.Exit(user)
 	}
-	spaceRegexp := regexp.MustCompile(`\s+`)
+	spaceRegexp := regexp.MustCompile(`[ \f\r\t\v]`)
 	input := spaceRegexp.ReplaceAllString(message.Text, " ")
-	variants := strings.Split(input, " ")
+	variants := strings.Split(input, "\n")
 	currentState := user.State
 	if !(2 <= len(variants) && len(variants) <= 16) {
 		return "Incorrect input", GetKeyboardByState(currentState)
