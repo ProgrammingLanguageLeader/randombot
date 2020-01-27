@@ -28,7 +28,7 @@ func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.R
 
 func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	var flipResult string
-	if rand.Int()%2 == 0 {
+	if rand.Intn(2) == 0 {
 		flipResult = "it's heads!"
 	} else {
 		flipResult = "it's tails!"
@@ -38,8 +38,8 @@ func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboa
 }
 
 func (service *Service) RollDice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	firstDie := rand.Int()%6 + 1
-	secondDie := rand.Int()%6 + 1
+	firstDie := rand.Intn(6) + 1
+	secondDie := rand.Intn(6) + 1
 	response := fmt.Sprintf("You have rolled the dice: %d and %d", firstDie, secondDie)
 	return response, GetKeyboardByState(user.State)
 }
@@ -60,7 +60,8 @@ func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyb
 	}
 	choiceIndex := rand.Intn(len(user.Variants))
 	choice := user.Variants[choiceIndex]
-	response := fmt.Sprintf("Choice between %v: %s", user.Variants, choice)
+	joinedVariants := strings.Join(user.Variants, ", ")
+	response := fmt.Sprintf("Choice between [%s]: %s", joinedVariants, choice)
 	return response, GetKeyboardByState(user.State)
 }
 
