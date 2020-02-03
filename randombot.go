@@ -1,9 +1,9 @@
 package main
 
 import (
-	"randombot/app/service/message"
 	"randombot/config"
 	"randombot/redis"
+	"randombot/service/message"
 	"randombot/telegram"
 )
 
