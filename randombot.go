@@ -1,10 +1,10 @@
 package main
 
 import (
-	"randombot/config"
-	"randombot/redis"
-	"randombot/service/message"
-	"randombot/telegram"
+	"github.com/ProgrammingLanguageLeader/randombot/config"
+	"github.com/ProgrammingLanguageLeader/randombot/redis"
+	"github.com/ProgrammingLanguageLeader/randombot/service/message"
+	"github.com/ProgrammingLanguageLeader/randombot/telegram"
 )
 
 func main() {

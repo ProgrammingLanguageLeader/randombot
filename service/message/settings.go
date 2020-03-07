@@ -1,9 +1,9 @@
 package message
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/redis"
+	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
-	"randombot/redis"
-	"randombot/redis/user"
 )
 
 func (service *Service) GoToLanguageSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {

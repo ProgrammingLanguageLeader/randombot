@@ -1,9 +1,9 @@
 package message
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
 	. "github.com/go-redis/redis"
-	"randombot/redis/user"
 )
 
 type Service struct {

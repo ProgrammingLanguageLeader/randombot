@@ -1,9 +1,9 @@
 package redis
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/config"
 	"github.com/go-redis/redis"
 	"log"
-	"randombot/config"
 )
 
 func CreateRedisClient(config *config.Config) *redis.Client {

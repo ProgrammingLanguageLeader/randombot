@@ -1,11 +1,11 @@
 package telegram
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/config"
+	"github.com/ProgrammingLanguageLeader/randombot/net"
+	"github.com/ProgrammingLanguageLeader/randombot/service/message"
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
-	"randombot/config"
-	"randombot/net"
-	"randombot/service/message"
 )
 
 func ConfigureBot(config *config.Config) *tgbotapi.BotAPI {

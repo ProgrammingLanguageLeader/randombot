@@ -2,10 +2,10 @@ package message
 
 import (
 	"fmt"
+	"github.com/ProgrammingLanguageLeader/randombot/redis"
+	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
 	"math/rand"
-	"randombot/redis"
-	"randombot/redis/user"
 	"strings"
 )
 

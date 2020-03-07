@@ -2,11 +2,11 @@ package net
 
 import (
 	"context"
+	"github.com/ProgrammingLanguageLeader/randombot/config"
 	"golang.org/x/net/proxy"
 	"log"
 	"net"
 	"net/http"
-	"randombot/config"
 )
 
 // it's not recommended to use proxy in production

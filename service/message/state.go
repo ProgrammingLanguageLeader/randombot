@@ -1,9 +1,9 @@
 package message
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/redis"
+	"github.com/ProgrammingLanguageLeader/randombot/telegram/keyboard"
 	"github.com/Syfaro/telegram-bot-api"
-	"randombot/redis"
-	"randombot/telegram/keyboard"
 )
 
 var stateToKeyboard = map[string]*tgbotapi.ReplyKeyboardMarkup{
