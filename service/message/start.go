@@ -10,7 +10,10 @@ import (
 )
 
 func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	langCode := strings.Split(tgUser.LanguageCode, "-")[0]
+	langCode := "en"
+	if tgUser.LanguageCode != "" {
+		langCode = strings.Split(tgUser.LanguageCode, "-")[0]
+	}
 	userInstance := user.User{
 		ID:              tgUser.ID,
 		LanguageCode:    langCode,
