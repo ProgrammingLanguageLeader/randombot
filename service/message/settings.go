@@ -12,7 +12,7 @@ func (service *Service) GoToLanguageSettings(user *user.User) (string, *tgbotapi
 	if err != nil {
 		service.ProcessError(redis.DefaultState)
 	}
-	return "Choose a language", GetKeyboardByState(user.State)
+	return "Choose a language", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GoToRandomGeneratorSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -22,7 +22,7 @@ func (service *Service) GoToRandomGeneratorSettings(user *user.User) (string, *t
 	if err != nil {
 		service.ProcessError(currentState)
 	}
-	return "Enter minimum and maximum numbers space separated", GetKeyboardByState(user.State)
+	return "Enter minimum and maximum numbers space separated", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GoToChoiceSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -32,7 +32,7 @@ func (service *Service) GoToChoiceSettings(user *user.User) (string, *tgbotapi.R
 	if err != nil {
 		service.ProcessError(currentState)
 	}
-	return "Enter the choice variants. One item - one line", GetKeyboardByState(user.State)
+	return "Enter the choice variants. One item - one line", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) SwitchLanguage(
@@ -46,7 +46,7 @@ func (service *Service) SwitchLanguage(
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Settings were successfully updated", GetKeyboardByState(user.State)
+	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) ChangeRandomGeneratorSettings(
@@ -62,7 +62,7 @@ func (service *Service) ChangeRandomGeneratorSettings(
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Settings were successfully updated", GetKeyboardByState(user.State)
+	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) ChangeChoiceSettings(
@@ -76,5 +76,5 @@ func (service *Service) ChangeChoiceSettings(
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Settings were successfully updated", GetKeyboardByState(user.State)
+	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
 }

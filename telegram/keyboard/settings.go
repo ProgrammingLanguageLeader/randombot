@@ -19,6 +19,6 @@ var settingsKeyboard = tgbotapi.NewReplyKeyboard(
 	),
 )
 
-func GetSettingsKeyboard() *tgbotapi.ReplyKeyboardMarkup {
+func GetSettingsKeyboard(lang string) *tgbotapi.ReplyKeyboardMarkup {
 	return &settingsKeyboard
 }

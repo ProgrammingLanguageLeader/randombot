@@ -10,6 +10,6 @@ var exitKeyboard = tgbotapi.NewReplyKeyboard(
 	),
 )
 
-func GetExitKeyboard() *tgbotapi.ReplyKeyboardMarkup {
+func GetExitKeyboard(lang string) *tgbotapi.ReplyKeyboardMarkup {
 	return &exitKeyboard
 }

@@ -6,19 +6,21 @@ import (
 	"github.com/Syfaro/telegram-bot-api"
 )
 
-var stateToKeyboard = map[string]*tgbotapi.ReplyKeyboardMarkup{
-	redis.StartMenu:        keyboard.GetStartKeyboard(),
-	redis.ChoiceMenu:       keyboard.GetExitKeyboard(),
-	redis.LanguageMenu:     keyboard.GetLanguageSettingsKeyboard(),
-	redis.RandomNumberMenu: keyboard.GetExitKeyboard(),
-	redis.SettingsMenu:     keyboard.GetSettingsKeyboard(),
-	redis.DefaultState:     nil,
+var stateToMarkupGetter = map[string]func(string) *tgbotapi.ReplyKeyboardMarkup{
+	redis.StartMenu:        keyboard.GetStartKeyboard,
+	redis.ChoiceMenu:       keyboard.GetExitKeyboard,
+	redis.LanguageMenu:     keyboard.GetLanguageSettingsKeyboard,
+	redis.RandomNumberMenu: keyboard.GetExitKeyboard,
+	redis.SettingsMenu:     keyboard.GetSettingsKeyboard,
+	redis.DefaultState: func(string) *tgbotapi.ReplyKeyboardMarkup {
+		return nil
+	},
 }
 
-func GetKeyboardByState(state string) *tgbotapi.ReplyKeyboardMarkup {
-	markup, contains := stateToKeyboard[state]
+func GetKeyboard(state string, lang string) *tgbotapi.ReplyKeyboardMarkup {
+	getMarkup, contains := stateToMarkupGetter[state]
 	if !contains {
 		return nil
 	}
-	return markup
+	return getMarkup(lang)
 }

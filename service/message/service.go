@@ -19,11 +19,12 @@ func NewService(dbClient *Client) *Service {
 }
 
 func (service *Service) ProcessError(currentState string) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentKeyboard := GetKeyboardByState(currentState)
+	// TODO: pass language code here
+	currentKeyboard := GetKeyboard(currentState, "en")
 	return "Something went wrong... Please, try again later", currentKeyboard
 }
 
 func (service *Service) ProcessUserMistake(currentState string) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentKeyboard := GetKeyboardByState(currentState)
+	currentKeyboard := GetKeyboard(currentState, "en")
 	return "Sorry, I don't understand you", currentKeyboard
 }

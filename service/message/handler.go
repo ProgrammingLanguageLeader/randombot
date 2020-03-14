@@ -2,6 +2,7 @@ package message
 
 import (
 	"fmt"
+	"github.com/ProgrammingLanguageLeader/randombot/locale"
 	"github.com/ProgrammingLanguageLeader/randombot/redis"
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/ProgrammingLanguageLeader/randombot/telegram/keyboard"
@@ -44,8 +45,8 @@ func (service *Service) HandleCommand(
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	command := message.Command()
 	switch command {
-	case "help", "about":
-		return service.GetAbout(user)
+	case "help":
+		return service.GetHelp(user)
 	case "flipcoin":
 		return service.FlipCoin(user)
 	}
@@ -57,18 +58,18 @@ func (service *Service) HandleStartMenu(
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	switch message.Text {
-	case keyboard.FlipCoin:
+	case locale.LocalizeSimpleMessage(&keyboard.FlipCoin, user.LanguageCode):
 		return service.FlipCoin(user)
-	case keyboard.RollDice:
+	case locale.LocalizeSimpleMessage(&keyboard.RollDice, user.LanguageCode):
 		return service.RollDice(user)
-	case keyboard.RandomNumber:
+	case locale.LocalizeSimpleMessage(&keyboard.RandomNumber, user.LanguageCode):
 		return service.GetRandomNumber(user)
-	case keyboard.MakeChoice:
+	case locale.LocalizeSimpleMessage(&keyboard.MakeChoice, user.LanguageCode):
 		return service.MakeChoice(user)
-	case keyboard.Settings:
+	case locale.LocalizeSimpleMessage(&keyboard.Settings, user.LanguageCode):
 		return service.GoToSettings(user)
-	case keyboard.About:
-		return service.GetAbout(user)
+	case locale.LocalizeSimpleMessage(&keyboard.Help, user.LanguageCode):
+		return service.GetHelp(user)
 	}
 	return service.ProcessUserMistake(user.State)
 }
@@ -85,7 +86,7 @@ func (service *Service) HandleChoiceMenu(
 	variants := strings.Split(input, "\n")
 	currentState := user.State
 	if !(2 <= len(variants) && len(variants) <= 16) {
-		return "Incorrect input", GetKeyboardByState(currentState)
+		return "Incorrect input", GetKeyboard(currentState, user.LanguageCode)
 	}
 	return service.ChangeChoiceSettings(variants, user)
 }

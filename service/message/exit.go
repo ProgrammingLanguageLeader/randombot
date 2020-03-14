@@ -13,5 +13,5 @@ func (service *Service) Exit(user *user.User) (string, *tgbotapi.ReplyKeyboardMa
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Choose one of the following options", GetKeyboardByState(user.State)
+	return "Choose one of the following options", GetKeyboard(user.State, user.LanguageCode)
 }

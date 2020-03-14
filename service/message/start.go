@@ -26,7 +26,7 @@ func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.R
 	if err != nil {
 		return service.ProcessError(redis.DefaultState)
 	}
-	return "Hello! You have successfully registered!", GetKeyboardByState(userInstance.State)
+	return "Hello! You have successfully registered!", GetKeyboard(userInstance.State, userInstance.LanguageCode)
 }
 
 func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -37,14 +37,14 @@ func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboa
 		flipResult = "it's tails!"
 	}
 	response := fmt.Sprintf("You have flipped a coin: %s", flipResult)
-	return response, GetKeyboardByState(user.State)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) RollDice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	firstDie := rand.Intn(6) + 1
 	secondDie := rand.Intn(6) + 1
 	response := fmt.Sprintf("You have rolled the dice: %d and %d", firstDie, secondDie)
-	return response, GetKeyboardByState(user.State)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GetRandomNumber(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -54,7 +54,7 @@ func (service *Service) GetRandomNumber(user *user.User) (string, *tgbotapi.Repl
 		user.MinRandomNumber,
 		user.MaxRandomNumber,
 		randNum)
-	return response, GetKeyboardByState(user.State)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -65,7 +65,7 @@ func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyb
 	choice := user.Variants[choiceIndex]
 	joinedVariants := strings.Join(user.Variants, ", ")
 	response := fmt.Sprintf("Choice between [%s]: %s", joinedVariants, choice)
-	return response, GetKeyboardByState(user.State)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GoToSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -75,9 +75,9 @@ func (service *Service) GoToSettings(user *user.User) (string, *tgbotapi.ReplyKe
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Choose one of the following options", GetKeyboardByState(user.State)
+	return "Choose one of the following options", GetKeyboard(user.State, user.LanguageCode)
 }
 
-func (service *Service) GetAbout(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	return "Well, I hope it will be written soon :)", GetKeyboardByState(user.State)
+func (service *Service) GetHelp(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+	return "Well, I hope it will be written soon :)", GetKeyboard(user.State, user.LanguageCode)
 }
