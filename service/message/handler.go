@@ -50,7 +50,7 @@ func (service *Service) HandleCommand(
 	case "flipcoin":
 		return service.FlipCoin(user)
 	}
-	return "Unsupported command", nil
+	return "Unsupported command", GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) HandleStartMenu(
