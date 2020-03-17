@@ -1,0 +1,23 @@
+[button_flip-coin]
+hash = "sha1-b14d0cd58b85a4c47a1894344e14c2051b25ffd8"
+other = "Бросить монетку"
+
+[button_help]
+hash = "sha1-c47ae15370cfe1ed2781eedc1dc2547d12d9e972"
+other = "Помощь"
+
+[button_make-choice]
+hash = "sha1-b46be8731eab0b7582d7d01fade737ca94ad7d66"
+other = "Случайное число"
+
+[button_make_choice]
+hash = "sha1-8b65aac9ba563ce69397b4ed0b85437fc9926379"
+other = "Сделать выбор"
+
+[button_roll-dice]
+hash = "sha1-a255233a0083d42865a14d86c0c842f0125fa82b"
+other = "Бросить кость"
+
+[button_settings]
+hash = "sha1-c7f73bb54d928922c3838bb789ee9fb8a5b1eb37"
+other = "Настройки"

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-const baseDir = "locale"
+const baseDir = "locale/assets"
 
 var supportedLanguages = []string{"en", "ru"}
 
@@ -25,7 +25,7 @@ func LoadTranslations() *i18n.Bundle {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc(format, toml.Unmarshal)
 	for _, lang := range supportedLanguages {
-		path := fmt.Sprintf("%s/translate.%s.%s", baseDir, lang, format)
+		path := fmt.Sprintf("%s/active.%s.%s", baseDir, lang, format)
 		bundle.MustLoadMessageFile(path)
 	}
 	bundleInstance = bundle
