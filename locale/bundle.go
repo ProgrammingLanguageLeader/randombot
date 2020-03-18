@@ -39,3 +39,8 @@ func LocalizeSimpleMessage(message *i18n.Message, lang string) string {
 		MessageID: message.ID,
 	})
 }
+
+func EqualsSimpleMessage(message *i18n.Message, text string, lang string) bool {
+	localizedMessage := LocalizeSimpleMessage(message, lang)
+	return text == localizedMessage
+}

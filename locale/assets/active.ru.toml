@@ -1,3 +1,11 @@
+[button_choice-settings]
+hash = "sha1-ce87c51077a2ef3fff9320cf73b23c870d9ba3f1"
+other = "Настройки выбора"
+
+[button_exit]
+hash = "sha1-f83b6fe3aebf13744e866019556d9129cd7a55be"
+other = "Выход"
+
 [button_flip-coin]
 hash = "sha1-b14d0cd58b85a4c47a1894344e14c2051b25ffd8"
 other = "Бросить монетку"
@@ -6,6 +14,10 @@ other = "Бросить монетку"
 hash = "sha1-c47ae15370cfe1ed2781eedc1dc2547d12d9e972"
 other = "Помощь"
 
+[button_language-settings]
+hash = "sha1-49ddf0eb799de42693040dadaac202ba4004f236"
+other = "Настройки языка"
+
 [button_make-choice]
 hash = "sha1-b46be8731eab0b7582d7d01fade737ca94ad7d66"
 other = "Случайное число"
@@ -13,6 +25,10 @@ other = "Случайное число"
 [button_make_choice]
 hash = "sha1-8b65aac9ba563ce69397b4ed0b85437fc9926379"
 other = "Сделать выбор"
+
+[button_random-generator-settings]
+hash = "sha1-f7a50d6912a2b81879cb387454c42ea10b8c8a0c"
+other = "Настройки генератора чисел"
 
 [button_roll-dice]
 hash = "sha1-a255233a0083d42865a14d86c0c842f0125fa82b"

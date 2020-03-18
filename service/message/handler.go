@@ -27,12 +27,16 @@ func (service *Service) HandleMessage(message *tgbotapi.Message) (string, *tgbot
 	switch userInstance.State {
 	case redis.StartMenu:
 		return service.HandleStartMenu(message, userInstance)
+
 	case redis.ChoiceMenu:
 		return service.HandleChoiceMenu(message, userInstance)
+
 	case redis.SettingsMenu:
 		return service.HandleSettingsMenu(message, userInstance)
+
 	case redis.RandomNumberMenu:
 		return service.HandleRandomNumberMenu(message, userInstance)
+
 	case redis.LanguageMenu:
 		return service.HandleLanguageMenu(message, userInstance)
 	}
@@ -60,14 +64,19 @@ func (service *Service) HandleStartMenu(
 	switch message.Text {
 	case locale.LocalizeSimpleMessage(&keyboard.FlipCoin, user.LanguageCode):
 		return service.FlipCoin(user)
+
 	case locale.LocalizeSimpleMessage(&keyboard.RollDice, user.LanguageCode):
 		return service.RollDice(user)
+
 	case locale.LocalizeSimpleMessage(&keyboard.RandomNumber, user.LanguageCode):
 		return service.GetRandomNumber(user)
+
 	case locale.LocalizeSimpleMessage(&keyboard.MakeChoice, user.LanguageCode):
 		return service.MakeChoice(user)
+
 	case locale.LocalizeSimpleMessage(&keyboard.Settings, user.LanguageCode):
 		return service.GoToSettings(user)
+
 	case locale.LocalizeSimpleMessage(&keyboard.Help, user.LanguageCode):
 		return service.GetHelp(user)
 	}
@@ -78,7 +87,8 @@ func (service *Service) HandleChoiceMenu(
 	message *tgbotapi.Message,
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	if message.Text == keyboard.Exit {
+	localizedExit := locale.LocalizeSimpleMessage(&keyboard.Exit, user.LanguageCode)
+	if localizedExit == message.Text {
 		return service.Exit(user)
 	}
 	spaceRegexp := regexp.MustCompile(`[ \f\r\t\v]`)
@@ -96,13 +106,16 @@ func (service *Service) HandleSettingsMenu(
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	switch message.Text {
-	case keyboard.RandomGeneratorSettings:
+	case locale.LocalizeSimpleMessage(&keyboard.RandomGeneratorSettings, user.LanguageCode):
 		return service.GoToRandomGeneratorSettings(user)
-	case keyboard.ChoiceSettings:
+
+	case locale.LocalizeSimpleMessage(&keyboard.ChoiceSettings, user.LanguageCode):
 		return service.GoToChoiceSettings(user)
-	case keyboard.LanguageSettings:
+
+	case locale.LocalizeSimpleMessage(&keyboard.LanguageSettings, user.LanguageCode):
 		return service.GoToLanguageSettings(user)
-	case keyboard.Exit:
+
+	case locale.LocalizeSimpleMessage(&keyboard.Exit, user.LanguageCode):
 		return service.Exit(user)
 	}
 	return service.ProcessUserMistake(user.State)
@@ -113,7 +126,7 @@ func (service *Service) HandleRandomNumberMenu(
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	input := message.Text
-	if input == keyboard.Exit {
+	if locale.EqualsSimpleMessage(&keyboard.Exit, input, user.LanguageCode) {
 		return service.Exit(user)
 	}
 	var minRandomNumber int
@@ -134,10 +147,13 @@ func (service *Service) HandleLanguageMenu(
 	switch input {
 	case keyboard.EnglishLanguage:
 		languageCode = "en"
+
 	case keyboard.RussianLanguage:
 		languageCode = "ru"
-	case keyboard.Exit:
+
+	case locale.LocalizeSimpleMessage(&keyboard.Exit, user.LanguageCode):
 		return service.Exit(user)
+
 	default:
 		return service.ProcessUserMistake(user.State)
 	}
