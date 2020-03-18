@@ -12,6 +12,6 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/main .
-COPY --from=builder /app/locale/translate.* ./locale/
+COPY --from=builder /app/locale/assets/* ./locale/assets/
 EXPOSE 8080
 CMD ["./main"]
