@@ -40,7 +40,11 @@ func LocalizeSimpleMessage(message *i18n.Message, lang string) string {
 	})
 }
 
-func EqualsSimpleMessage(message *i18n.Message, text string, lang string) bool {
-	localizedMessage := LocalizeSimpleMessage(message, lang)
-	return text == localizedMessage
+func LocalizeMessage(message *i18n.Message, lang string, templateData map[string]interface{}) string {
+	bundle := GetBundle()
+	localizer := i18n.NewLocalizer(bundle, lang)
+	return localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID:    message.ID,
+		TemplateData: templateData,
+	})
 }

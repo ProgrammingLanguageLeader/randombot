@@ -1,12 +1,68 @@
 package message
 
 import (
-	"fmt"
+	"github.com/ProgrammingLanguageLeader/randombot/locale"
 	"github.com/ProgrammingLanguageLeader/randombot/redis"
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"math/rand"
 	"strings"
+)
+
+const choiceMessageTemplate = `Choice between
+{{.Choices}}
+===============
+{{.Result}}
+`
+
+var (
+	registrationMessage = i18n.Message{
+		ID:    "message_register-success",
+		Other: "Hello! You have successfully registered!",
+	}
+
+	flippingCoinHeadsMessage = i18n.Message{
+		ID:    "message_flipping-coin-heads",
+		Other: "it's heads!",
+	}
+
+	flippingCoinTailsMessage = i18n.Message{
+		ID:    "message_flipping-coin-tails",
+		Other: "it's tails!",
+	}
+
+	flippingCoinMessage = i18n.Message{
+		ID:    "message_flipping-coin",
+		Other: "You have flipped a coin: {{.Result}}",
+	}
+
+	rollingDiceMessage = i18n.Message{
+		ID:    "message_rolling-dice",
+		Other: "You have rolled the dice: {{.First}} and {{.Second}}",
+	}
+
+	randomizingMessage = i18n.Message{
+		ID:    "message_randomizing",
+		Other: "Random number from the range [{{.Min}}...{{.Max}}]: {{.Result}}",
+	}
+
+	makingChoiceMessage = i18n.Message{
+		ID:    "message_making-choice",
+		Other: choiceMessageTemplate,
+	}
+
+	settingsMessage = i18n.Message{
+		ID:    "message_settings",
+		Other: "Choose one of the following options",
+	}
+
+	helpMessage = i18n.Message{
+		ID: "message_help",
+		Other: "This is a Telegram bot that enables you to generate some kind of pseudorandom values. " +
+			"For example, it has functionality for virtual \"rolling the dice\", \"flipping coin\", " +
+			"choice between set of options, etc",
+	}
 )
 
 func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -26,34 +82,41 @@ func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.R
 	if err != nil {
 		return service.ProcessError(redis.DefaultState)
 	}
-	return "Hello! You have successfully registered!", GetKeyboard(userInstance.State, userInstance.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&registrationMessage, userInstance.LanguageCode)
+	keyboard := GetKeyboard(userInstance.State, userInstance.LanguageCode)
+	return response, keyboard
 }
 
 func (service *Service) FlipCoin(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	var flipResult string
 	if rand.Intn(2) == 0 {
-		flipResult = "it's heads!"
+		flipResult = locale.LocalizeSimpleMessage(&flippingCoinHeadsMessage, user.LanguageCode)
 	} else {
-		flipResult = "it's tails!"
+		flipResult = locale.LocalizeSimpleMessage(&flippingCoinTailsMessage, user.LanguageCode)
 	}
-	response := fmt.Sprintf("You have flipped a coin: %s", flipResult)
+	response := locale.LocalizeMessage(&flippingCoinMessage, user.LanguageCode, map[string]interface{}{
+		"Result": flipResult,
+	})
 	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) RollDice(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	firstDie := rand.Intn(6) + 1
 	secondDie := rand.Intn(6) + 1
-	response := fmt.Sprintf("You have rolled the dice: %d and %d", firstDie, secondDie)
+	response := locale.LocalizeMessage(&rollingDiceMessage, user.LanguageCode, map[string]interface{}{
+		"First":  firstDie,
+		"Second": secondDie,
+	})
 	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GetRandomNumber(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	randNum := rand.Intn(user.MaxRandomNumber-user.MinRandomNumber) + user.MinRandomNumber
-	response := fmt.Sprintf(
-		"Random number from the range [%d...%d]: %d",
-		user.MinRandomNumber,
-		user.MaxRandomNumber,
-		randNum)
+	response := locale.LocalizeMessage(&randomizingMessage, user.LanguageCode, map[string]interface{}{
+		"Min":    user.MinRandomNumber,
+		"Max":    user.MaxRandomNumber,
+		"Result": randNum,
+	})
 	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
@@ -63,8 +126,11 @@ func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyb
 	}
 	choiceIndex := rand.Intn(len(user.Variants))
 	choice := user.Variants[choiceIndex]
-	joinedVariants := strings.Join(user.Variants, ", ")
-	response := fmt.Sprintf("Choice between [%s]: %s", joinedVariants, choice)
+	joinedVariants := strings.Join(user.Variants, ", \n")
+	response := locale.LocalizeMessage(&makingChoiceMessage, user.LanguageCode, map[string]interface{}{
+		"Choices": joinedVariants,
+		"Result":  choice,
+	})
 	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
@@ -75,9 +141,11 @@ func (service *Service) GoToSettings(user *user.User) (string, *tgbotapi.ReplyKe
 	if err != nil {
 		return service.ProcessError(currentState)
 	}
-	return "Choose one of the following options", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&settingsMessage, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GetHelp(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	return "Well, I hope it will be written soon :)", GetKeyboard(user.State, user.LanguageCode)
+	answer := locale.LocalizeSimpleMessage(&helpMessage, user.LanguageCode)
+	return answer, GetKeyboard(user.State, user.LanguageCode)
 }

@@ -126,7 +126,8 @@ func (service *Service) HandleRandomNumberMenu(
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
 	input := message.Text
-	if locale.EqualsSimpleMessage(&keyboard.Exit, input, user.LanguageCode) {
+	localizedExit := locale.LocalizeSimpleMessage(&keyboard.Exit, user.LanguageCode)
+	if localizedExit == input {
 		return service.Exit(user)
 	}
 	var minRandomNumber int

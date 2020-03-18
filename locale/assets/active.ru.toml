@@ -37,3 +37,39 @@ other = "Бросить кость"
 [button_settings]
 hash = "sha1-c7f73bb54d928922c3838bb789ee9fb8a5b1eb37"
 other = "Настройки"
+
+[message_flipping-coin]
+hash = "sha1-9033c63dfa3beebd5d1774d404795b547f74e3a8"
+other = "Вы подбросили монетку: {{.Result}}"
+
+[message_flipping-coin-heads]
+hash = "sha1-b629175865f3bb488a67d6a675c1331bc98a1045"
+other = "решка!"
+
+[message_flipping-coin-tails]
+hash = "sha1-5906034a3939fdb3fc9de11b1ea7cf26d01adf3b"
+other = "орел!"
+
+[message_help]
+hash = "sha1-5d96b1b8fa794b88be2db315087d1699b8c9ad3c"
+other = "Это Telegram бот, позволяющий генерировать некоторые виды псевдослучайных значений. Например, он умеет виртуально \"бросать кости\", \"подбросывать монетку\", выбирать между несколькими пунктами, и т.п."
+
+[message_making-choice]
+hash = "sha1-54cc9bd7d6b2452fd69c0b9a065fb719cd4f4181"
+other = "Выбор между\n{{.Choices}}\n===============\n{{.Result}}\n"
+
+[message_randomizing]
+hash = "sha1-9846f4398338e65255e9fd224beb5f509709e135"
+other = "Случайное число из промежутка [{{.Min}}...{{.Max}}]: {{.Result}}"
+
+[message_register-success]
+hash = "sha1-9d8fe012e7fc583d1bbd1dc7895e53869a56c042"
+other = "Привет! Регистрация прошла успешно!"
+
+[message_rolling-dice]
+hash = "sha1-5e6678761eaea2b556c9f9acf49e539966740211"
+other = "Вы бросили кости: {{.First}} и {{.Second}}"
+
+[message_settings]
+hash = "sha1-bf7f58a8a6b6cc9943a61fe8f92f848c714f5a27"
+other = "Выберите один из следующих пунктов"
