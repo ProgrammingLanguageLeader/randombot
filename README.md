@@ -55,6 +55,7 @@ Launching the application:
 ### Translating new strings
 - Find new strings to translate:
     ```bash
+    goi18n extract -outdir locale/assets
     goi18n merge -outdir locale/assets locale/assets/active.*.toml
     ```
     You will get "translate.\<language code\>.toml" files with strings that translations need to be updated.
