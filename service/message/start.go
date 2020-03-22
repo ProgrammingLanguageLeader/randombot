@@ -5,64 +5,9 @@ import (
 	"github.com/ProgrammingLanguageLeader/randombot/redis"
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
-	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"log"
 	"math/rand"
 	"strings"
-)
-
-const choiceMessageTemplate = `Choice between
-{{.Choices}}
-===============
-{{.Result}}
-`
-
-var (
-	registrationMessage = i18n.Message{
-		ID:    "message_register-success",
-		Other: "Hello! You have successfully registered!",
-	}
-
-	flippingCoinHeadsMessage = i18n.Message{
-		ID:    "message_flipping-coin-heads",
-		Other: "it's heads!",
-	}
-
-	flippingCoinTailsMessage = i18n.Message{
-		ID:    "message_flipping-coin-tails",
-		Other: "it's tails!",
-	}
-
-	flippingCoinMessage = i18n.Message{
-		ID:    "message_flipping-coin",
-		Other: "You have flipped a coin: {{.Result}}",
-	}
-
-	rollingDiceMessage = i18n.Message{
-		ID:    "message_rolling-dice",
-		Other: "You have rolled the dice: {{.First}} and {{.Second}}",
-	}
-
-	randomizingMessage = i18n.Message{
-		ID:    "message_randomizing",
-		Other: "Random number from the range [{{.Min}}...{{.Max}}]: {{.Result}}",
-	}
-
-	makingChoiceMessage = i18n.Message{
-		ID:    "message_making-choice",
-		Other: choiceMessageTemplate,
-	}
-
-	settingsMessage = i18n.Message{
-		ID:    "message_settings",
-		Other: "Choose one of the following options",
-	}
-
-	helpMessage = i18n.Message{
-		ID: "message_help",
-		Other: "This is a Telegram bot that enables you to generate some kind of pseudorandom values. " +
-			"For example, it has functionality for virtual \"rolling the dice\", \"flipping coin\", " +
-			"choice between set of options, etc",
-	}
 )
 
 func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
@@ -80,7 +25,8 @@ func (service *Service) RegisterUser(tgUser *tgbotapi.User) (string, *tgbotapi.R
 	}
 	err := service.userRepository.Set(&userInstance)
 	if err != nil {
-		return service.ProcessError(redis.DefaultState)
+		log.Println("User registration error: ", err)
+		return "Internal server error", GetKeyboard(redis.DefaultState, langCode)
 	}
 	response := locale.LocalizeSimpleMessage(&registrationMessage, userInstance.LanguageCode)
 	keyboard := GetKeyboard(userInstance.State, userInstance.LanguageCode)
@@ -135,11 +81,9 @@ func (service *Service) MakeChoice(user *user.User) (string, *tgbotapi.ReplyKeyb
 }
 
 func (service *Service) GoToSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
-	user.State = redis.SettingsMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.SettingsMenu)
 	if err != nil {
-		return service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
 	response := locale.LocalizeSimpleMessage(&settingsMessage, user.LanguageCode)
 	return response, GetKeyboard(user.State, user.LanguageCode)

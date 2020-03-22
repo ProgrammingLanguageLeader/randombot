@@ -1,52 +1,47 @@
 package message
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/locale"
 	"github.com/ProgrammingLanguageLeader/randombot/redis"
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
 )
 
 func (service *Service) GoToLanguageSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	user.State = redis.LanguageMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.LanguageMenu)
 	if err != nil {
-		service.ProcessError(redis.DefaultState)
+		return service.ProcessError(user)
 	}
-	return "Choose a language", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&chooseLanguageMessage, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GoToRandomGeneratorSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
-	user.State = redis.RandomNumberMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.RandomNumberMenu)
 	if err != nil {
-		service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
-	return "Enter minimum and maximum numbers space separated", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&enterMinAndMaxNumbersMessage, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) GoToChoiceSettings(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
-	user.State = redis.ChoiceMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.ChoiceMenu)
 	if err != nil {
-		service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
-	return "Enter the choice variants. One item - one line", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&enterChoiceVariantsMessage, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
-func (service *Service) SwitchLanguage(
-	languageCode string,
-	user *user.User,
-) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
-	user.State = redis.StartMenu
-	user.LanguageCode = languageCode
-	err := service.userRepository.Set(user)
+func (service *Service) SwitchLanguage(lang string, user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+	user.LanguageCode = lang
+	err := service.UpdateUserState(user, redis.StartMenu)
 	if err != nil {
-		return service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
-	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&settingsWereSuccessfullyUpdated, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) ChangeRandomGeneratorSettings(
@@ -54,27 +49,25 @@ func (service *Service) ChangeRandomGeneratorSettings(
 	maxNumber int,
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
 	user.MinRandomNumber = minNumber
 	user.MaxRandomNumber = maxNumber
-	user.State = redis.StartMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.StartMenu)
 	if err != nil {
-		return service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
-	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&settingsWereSuccessfullyUpdated, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) ChangeChoiceSettings(
 	variants []string,
 	user *user.User,
 ) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentState := user.State
 	user.Variants = variants
-	user.State = redis.StartMenu
-	err := service.userRepository.Set(user)
+	err := service.UpdateUserState(user, redis.StartMenu)
 	if err != nil {
-		return service.ProcessError(currentState)
+		return service.ProcessError(user)
 	}
-	return "Settings were successfully updated", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&settingsWereSuccessfullyUpdated, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }

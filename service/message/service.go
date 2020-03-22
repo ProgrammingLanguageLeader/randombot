@@ -1,6 +1,7 @@
 package message
 
 import (
+	"github.com/ProgrammingLanguageLeader/randombot/locale"
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/Syfaro/telegram-bot-api"
 	. "github.com/go-redis/redis"
@@ -18,13 +19,14 @@ func NewService(dbClient *Client) *Service {
 	}
 }
 
-func (service *Service) ProcessError(currentState string) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	// TODO: pass language code here
-	currentKeyboard := GetKeyboard(currentState, "en")
-	return "Something went wrong... Please, try again later", currentKeyboard
+func (service *Service) ProcessError(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+	currentKeyboard := GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&somethingWentWrongMessage, user.LanguageCode)
+	return response, currentKeyboard
 }
 
-func (service *Service) ProcessUserMistake(currentState string) (string, *tgbotapi.ReplyKeyboardMarkup) {
-	currentKeyboard := GetKeyboard(currentState, "en")
-	return "Sorry, I don't understand you", currentKeyboard
+func (service *Service) ProcessUserMistake(user *user.User) (string, *tgbotapi.ReplyKeyboardMarkup) {
+	currentKeyboard := GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&dontUnderstandMessage, user.LanguageCode)
+	return response, currentKeyboard
 }

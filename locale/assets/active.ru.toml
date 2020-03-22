@@ -38,6 +38,26 @@ other = "Бросить кость"
 hash = "sha1-c7f73bb54d928922c3838bb789ee9fb8a5b1eb37"
 other = "Настройки"
 
+[message_choose-language]
+hash = "sha1-456a836fa9fe5c67b67a1312859036eb1981bf09"
+other = "Выберите язык"
+
+[message_choose-options]
+hash = "sha1-bf7f58a8a6b6cc9943a61fe8f92f848c714f5a27"
+other = "Выберите одну из следующих опций"
+
+[message_dont-understand]
+hash = "sha1-ce57e13b80509975daa4eefc229f2e9462e05ac1"
+other = "Извините, я Вас не понимаю"
+
+[message_enter-choice-variants]
+hash = "sha1-9b857b7913d3fad6ed12a9f8f45f812ec1069150"
+other = "Введите варианты для выбора. Один пункт - одна строка"
+
+[message_enter-min-and-max-numbers]
+hash = "sha1-d3efc5ecfef5f74aa53cf61d709c228f0d418124"
+other = "Введите минимальное и максимальное число через пробел"
+
 [message_flipping-coin]
 hash = "sha1-9033c63dfa3beebd5d1774d404795b547f74e3a8"
 other = "Вы подбросили монетку: {{.Result}}"
@@ -53,6 +73,10 @@ other = "орел!"
 [message_help]
 hash = "sha1-5d96b1b8fa794b88be2db315087d1699b8c9ad3c"
 other = "Это Telegram бот, позволяющий генерировать некоторые виды псевдослучайных значений. Например, он умеет виртуально \"бросать кости\", \"подбросывать монетку\", выбирать между несколькими пунктами, и т.п."
+
+[message_incorrect-input]
+hash = "sha1-3712e26e65fa2fd452c2dbf5d260340b0460363b"
+other = "Некорректный ввод"
 
 [message_making-choice]
 hash = "sha1-54cc9bd7d6b2452fd69c0b9a065fb719cd4f4181"
@@ -73,3 +97,15 @@ other = "Вы бросили кости: {{.First}} и {{.Second}}"
 [message_settings]
 hash = "sha1-bf7f58a8a6b6cc9943a61fe8f92f848c714f5a27"
 other = "Выберите один из следующих пунктов"
+
+[message_settings-were-successfully-updated]
+hash = "sha1-db6b1e6a68a487211f0b0c4c36428a35e1cec602"
+other = "Настройки успешно обновлены"
+
+[message_something-went-wrong]
+hash = "sha1-4b7940fb4bc7aceb0ac875e897fb33e67505ee0c"
+other = "Что-то пошло не так... Пожалуйста, попробуйте снова позже"
+
+[message_unsupported-command]
+hash = "sha1-68a2614d9459e846a7f4c70c6a129c1181e3c365"
+other = "Неподдерживаемая команда"

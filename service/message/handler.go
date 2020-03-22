@@ -7,6 +7,7 @@ import (
 	"github.com/ProgrammingLanguageLeader/randombot/redis/user"
 	"github.com/ProgrammingLanguageLeader/randombot/telegram/keyboard"
 	"github.com/Syfaro/telegram-bot-api"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -18,7 +19,10 @@ func (service *Service) HandleMessage(message *tgbotapi.Message) (string, *tgbot
 		case *user.DoesNotExist:
 			return service.RegisterUser(message.From)
 		default:
-			return service.ProcessError(redis.DefaultState)
+			log.Println(err)
+			defaultLang := "en"
+			response := "Internal server error... try again later"
+			return response, GetKeyboard(redis.DefaultState, defaultLang)
 		}
 	}
 	if message.IsCommand() {
@@ -54,7 +58,8 @@ func (service *Service) HandleCommand(
 	case "flipcoin":
 		return service.FlipCoin(user)
 	}
-	return "Unsupported command", GetKeyboard(user.State, user.LanguageCode)
+	response := locale.LocalizeSimpleMessage(&unsupportedCommandMessage, user.LanguageCode)
+	return response, GetKeyboard(user.State, user.LanguageCode)
 }
 
 func (service *Service) HandleStartMenu(
@@ -80,7 +85,7 @@ func (service *Service) HandleStartMenu(
 	case locale.LocalizeSimpleMessage(&keyboard.Help, user.LanguageCode):
 		return service.GetHelp(user)
 	}
-	return service.ProcessUserMistake(user.State)
+	return service.ProcessUserMistake(user)
 }
 
 func (service *Service) HandleChoiceMenu(
@@ -96,7 +101,8 @@ func (service *Service) HandleChoiceMenu(
 	variants := strings.Split(input, "\n")
 	currentState := user.State
 	if !(2 <= len(variants) && len(variants) <= 16) {
-		return "Incorrect input", GetKeyboard(currentState, user.LanguageCode)
+		response := locale.LocalizeSimpleMessage(&incorrectInputMessage, user.LanguageCode)
+		return response, GetKeyboard(currentState, user.LanguageCode)
 	}
 	return service.ChangeChoiceSettings(variants, user)
 }
@@ -118,7 +124,7 @@ func (service *Service) HandleSettingsMenu(
 	case locale.LocalizeSimpleMessage(&keyboard.Exit, user.LanguageCode):
 		return service.Exit(user)
 	}
-	return service.ProcessUserMistake(user.State)
+	return service.ProcessUserMistake(user)
 }
 
 func (service *Service) HandleRandomNumberMenu(
@@ -134,7 +140,7 @@ func (service *Service) HandleRandomNumberMenu(
 	var maxRandomNumber int
 	successfullyScanned, err := fmt.Sscanf(input, "%d %d", &minRandomNumber, &maxRandomNumber)
 	if err != nil || successfullyScanned != 2 {
-		return service.ProcessUserMistake(user.State)
+		return service.ProcessUserMistake(user)
 	}
 	return service.ChangeRandomGeneratorSettings(minRandomNumber, maxRandomNumber, user)
 }
@@ -156,7 +162,7 @@ func (service *Service) HandleLanguageMenu(
 		return service.Exit(user)
 
 	default:
-		return service.ProcessUserMistake(user.State)
+		return service.ProcessUserMistake(user)
 	}
 	return service.SwitchLanguage(languageCode, user)
 
